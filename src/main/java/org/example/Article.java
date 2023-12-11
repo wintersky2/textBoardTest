@@ -12,4 +12,5 @@ public class Article {
     String title;
     String content;
     String userId;
+    String regDate;
 }

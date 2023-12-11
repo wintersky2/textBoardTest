@@ -36,8 +36,8 @@ public class Main {
                     String content = sc.nextLine();
 
                     String userId = loginedMember.getUserId();
-
-                    Article article = new Article(lastArticleId, title, content, userId);
+                    String regDate = LocalDate.now().toString();
+                    Article article = new Article(lastArticleId, title, content, userId, regDate);
                     articleList.add(article);
 
                     lastArticleId++;
