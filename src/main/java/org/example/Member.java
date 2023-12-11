@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
-@Getter
 @Setter
+@Getter
 public class Member {
     int id;
     String userId;
