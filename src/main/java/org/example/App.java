@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    App() {
+    void run() {
         Scanner sc = new Scanner(System.in);
+
+        System.out.println("== 시스템 시작 ==");
+
         List<Member> memberList = new ArrayList<>();
         int lastMemberId = 1;
 
@@ -204,5 +207,6 @@ public class App {
                 System.out.println("로그아웃 되었습니다.");
             }
         }
+        sc.close();
     }
 }
