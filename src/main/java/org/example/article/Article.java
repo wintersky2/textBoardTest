@@ -1,15 +1,16 @@
-package org.example;
+package org.example.article;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
-@Setter
 @Getter
-public class Member {
+@Setter
+public class Article {
     int id;
-    String userId;
-    String password;
+    String title;
+    String content;
+    String author;
     String regDate;
 }
