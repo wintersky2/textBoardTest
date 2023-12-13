@@ -1,96 +1,103 @@
 package org.example.article;
 
-import org.example.member.Member;
+import org.example.Global;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleController {
-    List<Member> memberList = new ArrayList<>();
-    int lastMemberId = 1;
 
-    public  void create(){
-        System.out.printf("제목 : ");
-        String title = sc.nextLine();
-        System.out.printf("내용 : ");
-        String content = sc.nextLine();
+    ArticleService articleService;
 
-        LocalDate now = LocalDate.now();
-
-        Article article = new Article(lastArticleId, title, content, loginedMember.getUserId(), now.toString());
-        articleList.add(article);
-
-        lastArticleId++;
+    public ArticleController () {
+        articleService = new ArticleService();
     }
-    public void list(){
+
+    public void create () {
+        if (Global.getLoginedMember() == null) {
+            System.out.println("해당기능은 로그인 후 가능합니다.");
+            return;
+        }
+
+        System.out.printf("제목 : ");
+        String title = Global.getScanner().nextLine();
+        System.out.printf("내용 : ");
+        String content = Global.getScanner().nextLine();
+
+        int id = this.articleService.save(title, content);
+
+        System.out.println(id + "번 게시글이 등록되었습니다.");
+
+    }
+    public void list () {
+        List<Article> articleList = this.articleService.findByAll();
+
         System.out.println("번호 / 제목 / 내용 / 작성자 / 등록일");
         System.out.println("--------------------------------------");
         for (Article article : articleList) {
-            System.out.printf("%d,   %s,   %s,   %s,   %s\n", article.getId(), article.getTitle(), article.getContent(), article.getAuthor(), article.getRegDate());
+            System.out.printf("%d,   %s,   %s,   %d,   %s\n", article.getId(), article.getTitle(), article.getContent(), article.getMemberId(), article.getRegDate());
         }
     }
-    public void delete(){
+    public void delete () {
+        if (Global.getLoginedMember() == null) {
+            System.out.println("해당기능은 로그인 후 가능합니다.");
+            return;
+        }
 
         System.out.println("삭제할 id를 입력하세요.");
         System.out.printf("ID : ");
-        int removeId = Integer.parseInt(sc.nextLine().trim());
+        int removeId = Integer.parseInt(Global.getScanner().nextLine().trim());
 
-        Article article = null;
-        for (int i = 0; i < articleList.size(); i++) {
-            if (removeId == articleList.get(i).getId()) {
-                article = articleList.get(i);
-            }
-        }
+        // 해당 article 객체 받아오기
+        Article article = this.articleService.articleFindById(removeId);
 
         if (article == null) {
             System.out.println("해당 게시글은 존재하지 않습니다.");
-            continue;
+            return;
         }
 
-        if (article.getAuthor() != loginedMember.getUserId()) {
+        if (article.getMemberId() != Global.getLoginedMember().getId()) {
             System.out.println("해당 작성자만 삭제가 가능합니다.");
-            continue;
+            return;
         }
 
-        articleList.remove(article);
+        int id = this.articleService.delete(article);
 
-        System.out.println(removeId + "번 게시글이 삭제 되었습니다.");
+        System.out.println(id + "번 게시글이 삭제 되었습니다.");
     }
-    public void update(){
+    public void update () {
+        if (Global.getLoginedMember() == null) {
+            System.out.println("해당기능은 로그인 후 가능합니다.");
+            return;
+        }
 
         System.out.println("수정할 id를 입력하세요.");
         System.out.printf("ID : ");
-        int modifyId = Integer.parseInt(sc.nextLine().trim());
+        int modifyId = Integer.parseInt(Global.getScanner().nextLine().trim());
 
-        Article article = null;
-        for (int i = 0; i < articleList.size(); i++) {
-            if (modifyId == articleList.get(i).getId()) {
-                article = articleList.get(i);
-            }
-        }
+        // 해당 article 객체 받아오기
+        Article article = this.articleService.articleFindById(modifyId);
 
         if (article == null) {
             System.out.println("해당 게시글은 존재하지 않습니다.");
-            continue;
+            return;
         }
 
-        if (article.getAuthor() != loginedMember.getUserId()) {
+        if (article.getMemberId() != Global.getLoginedMember().getId()) {
             System.out.println("해당 작성자만 수정이 가능합니다.");
-            continue;
+            return;
         }
 
 
         System.out.printf("기존 제목 : %s \n", article.getTitle());
         System.out.printf("수정할 제목 : ");
-        String title = sc.nextLine();
+        String title = Global.getScanner().nextLine();
         System.out.printf("기존 내용 : %s \n", article.getContent());
         System.out.printf("수정할 내용 : ");
-        String content = sc.nextLine();
+        String content = Global.getScanner().nextLine();
 
-        article.setTitle(title);
-        article.setContent(content);
+        int id = this.articleService.update(article, title, content);
 
-        System.out.println(modifyId + "번 게시글이 수정 되었습니다.");
+        System.out.println(id + "번 게시글이 수정 되었습니다.");
     }
+
 }
