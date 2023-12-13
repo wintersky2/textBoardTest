@@ -43,9 +43,10 @@ public class App {
                     articleController.list();
                     break;
                 case "삭제":
-                    articleController.update();
+                    articleController.delete();
                     break;
                 case "수정":
+                    articleController.update();
                     break;
                 case "회원가입":
                     memberController.join();
